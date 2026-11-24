@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El Radar de Repuestos</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--tx:#14181f;--mu:#5c6573;--bd:#dde1e7;--ac:#0b5cff;--acbg:#e7efff;--ok:#146c2e;--okbg:#def5e5;--wa:#8a5200;--wabg:#fff0d4;--ba:#a3121b;--babg:#fde2e2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141a;--card:#1a2029;--tx:#eef1f5;--mu:#98a2b3;--bd:#2b3441;--ac:#6ea0ff;--acbg:#1b2a4a;--ok:#7fdc9b;--okbg:#14301e;--wa:#ffc766;--wabg:#3a2b0e;--ba:#ff9a9f;--babg:#3d1519}}
+:root[data-theme="dark"]{--bg:#10141a;--card:#1a2029;--tx:#eef1f5;--mu:#98a2b3;--bd:#2b3441;--ac:#6ea0ff;--acbg:#1b2a4a;--ok:#7fdc9b;--okbg:#14301e;--wa:#ffc766;--wabg:#3a2b0e;--ba:#ff9a9f;--babg:#3d1519}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto;padding:0 14px 40px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:14px 0 10px}
+h1{font-size:20px;margin:0 0 2px}
+.sub{color:var(--mu);font-size:13px;margin:0 0 10px}
+.box{position:relative}
+input[type=search]{width:100%;font-size:18px;padding:14px 14px;border:2px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);outline:none;-webkit-appearance:none}
+input[type=search]:focus{border-color:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:8px 12px;font-size:14px;cursor:pointer}
+.info{color:var(--mu);font-size:14px;margin:6px 2px 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.code{font:700 18px ui-monospace,Menlo,Consolas,monospace;color:var(--ac)}
+.cp{border:1px solid var(--bd);background:var(--acbg);color:var(--ac);border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer}
+.desc{font-size:16px;margin:6px 0 8px;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--mu)}
+.b{border-radius:999px;padding:3px 10px;font-weight:700;font-size:13px}
+.ok{background:var(--okbg);color:var(--ok)}.wa{background:var(--wabg);color:var(--wa)}.ba{background:var(--babg);color:var(--ba)}.na{background:var(--bd);color:var(--mu)}
+.empty{text-align:center;color:var(--mu);padding:28px 10px}
+details{margin-top:22px;border-top:1px solid var(--bd);padding-top:12px;font-size:14px;color:var(--mu)}
+summary{cursor:pointer;font-weight:600}
+.btn{display:inline-block;margin:8px 8px 0 0;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:9px 13px;font-size:14px;cursor:pointer}
+ul{padding-left:18px}
+.wl{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed var(--bd);font-size:14px}.wl small{color:var(--mu)}.wl em{color:var(--wa);font-style:normal;font-weight:700}.card .row{margin-bottom:6px}.card details{margin-top:6px;border-top:0;padding-top:0}.card summary{font-weight:600;font-size:13px}
+.tabs{display:flex;gap:8px;margin:0 0 10px}.tab{flex:1;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:10px;font-size:15px;font-weight:600;cursor:pointer}.tab.on{border-color:var(--ac);background:var(--acbg);color:var(--ac)}
+textarea#ml{width:100%;font:15px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:12px;border:2px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);resize:vertical;outline:none}textarea#ml:focus{border-color:var(--ac)}
+.mq{font-size:13px;color:var(--mu);margin-bottom:6px;word-break:break-word}.alt{cursor:pointer;border-radius:6px}.alt:hover{background:var(--acbg)}.bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.btn.pri{background:var(--ac);color:var(--bg);border-color:var(--ac);font-weight:700}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>📡 El Radar de Repuestos</h1>
+<p class="sub" id="sub"></p>
+<div class="tabs"><button class="tab on" data-m="1">🔍 Un repuesto</button><button class="tab" data-m="2">📋 Varios (lista)</button></div>
+<div class="box" id="b1"><input id="q" type="search" placeholder="Ej.: tornillo BCC M12, motor 10 HP…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Buscar repuesto"></div>
+</header>
+<div id="m1">
+<div id="chips" class="chips"></div>
+<div id="info" class="info"></div>
+<div id="res"></div>
+</div>
+<div id="m2" hidden>
+<p class="info">Pega la lista de una cotización: un repuesto por línea (número de parte o descripción). También puedes pegar directo desde Excel. Máximo 200 líneas.</p>
+<textarea id="ml" rows="7" placeholder="Ej.:&#10;rodamiento 6205 2rs&#10;tornillo bcc 12*25&#10;motor 10 hp" spellcheck="false"></textarea>
+<div class="bar"><button class="btn pri" id="mgo">Buscar lista</button><button class="btn" id="mex">Probar con un ejemplo</button><button class="btn" id="mclr">Limpiar</button></div>
+<div id="msum" class="info"></div>
+<div class="bar"><button class="btn" id="mcopy" hidden>📋 Copiar resultados para Excel</button></div>
+<div id="mres"></div>
+</div>
+<details>
+<summary>Cómo leer los datos y registro de búsquedas</summary>
+<p>El total es el stock BAAN sumado en todos los almacenes e incluye lo retenido. “Retenido” es la cantidad retenida dentro de ese total: puede salir del almacén, así que confírmala antes de contar con ella. Los almacenes principales de mantenimiento son ARF401 y ARF402; los demás aparecen en “Otros almacenes”.</p>
+<p><strong>Búsquedas sin resultado</strong> (sirven para detectar repuestos sin mapear):</p>
+<ul id="nores"><li>Todavía ninguna</li></ul>
+</details>
+</div>
+<script>(async()=>{try{
+
+const D=await(await fetch("inventario.json",{cache:"no-store"})).json();
+const W={AEF453:"ASEO Y CAFETERIA FONT. CTO 0",AET453:"ASEO Y CAFET.CRA 44 Y 43 CTO 0",AET455:"SUMINISTROS EN CONSIGNACION",AHL406:"ALMACEN HERRAMIENTAS IMPRESIÓN",AIF503:"DOTACION FONTIBON CTO 0",AIT503:"DOTACION CRA 44 Y 43 CTO 0",APF452:"PAPELERIA FONTIBON CTO 0",APT452:"PAPELERIA CRA 43 Y 44 CTO 0",ARF401:"REPUESTOS FONTIBON",ARF402:"REPUESTOS ACTIVOS FIJOS FONTIB",ARF403:"REPUESTOS PROY TALLER & MOLDES",ARF404:"OPERACION BAAN.",ARF406:"ALMACEN VENTA DE REPUESTOS",ARF407:"RODAMIENTOS EN CONSIGNACION",ARF408:"ELEMENTOS DE ASEO EN CONSIGNAC",ARF409:"REPUESTOS TRASLADO CARTAGENA.",ARF455:"DEVOLUCION REPUESTOS PLANTAS",ARF456:"REPUESTOS REPARADOS",ARL404:"MANTENIMIENTO MECANICO FONTIBO",ART402:"REPUESTOS CRA 43 Y 44",ART404:"OPERACION BAAN CRA 44",ART457:"DEVOLUCION REPUESTOS PL CRA 43",ART459:"RODAMIENTOS CONSG CRA 44"};
+const MAIN=["ARF401","ARF402"];
+const EJ=["tornillo BCC M12","motor 10 HP","plc fx3u","transformador 100kva","cadena portacable"];
+const SYN={TORNILLO:"TORN",PERNO:"TORN",RODAMIENTO:"RODAM",BALINERA:"RODAM",RULIMAN:"RODAM",ELECTROVALVULA:"VALVULA"};
+const STOP=new Set(["DE","DEL","LA","EL","PARA","CON","Y","EN","UN","UNA"]);
+let seen=new Set(),t1,t2;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fm=n=>Number(n).toLocaleString("es-CO",{maximumFractionDigits:2});
+const norm=s=>String(s).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/O[- ]RING/g,"ORING");
+const toks=s=>(norm(s).match(/[A-Z]+|[0-9]+/g)||[]).map(w=>SYN[w]||w).filter(w=>!STOP.has(w));
+function lev(a,b){const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++)d[i]=[i];for(let j=1;j<=n;j++)d[0][j]=j;
+for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function mw(q,w){if(q===w)return 3;if(/^\d/.test(q)||/^\d/.test(w))return 0;if(q.length<3||w.length<3)return 0;
+if(w.startsWith(q)||q.startsWith(w))return 2;
+if(q.length>=5&&Math.abs(q.length-w.length)<=2&&lev(q,w)<=(q.length>=8?2:1))return 1;return 0}
+const items=D.d.map(r=>{let t=0,rt=0;for(const s of r[2]){t+=s[1];rt+=s[2]}
+return{c:r[0],k:norm(r[0]).replace(/[^A-Z0-9]/g,""),d:r[1],st:r[2],t:Math.round(t*100)/100,r:Math.round(rt*100)/100,w:toks(r[1])}});
+$("sub").textContent=items.length.toLocaleString("es-CO")+" códigos · Datos actualizados al "+D.f;
+function search(q){const qt=toks(q);if(!qt.length)return{full:[],part:[]};
+const raw=norm(q).replace(/[^A-Z0-9]/g,""),single=!/\s/.test(q.trim())&&raw.length>=5,full=[],part=[];
+for(const it of items){let hit=0,soft=0,tot=0;
+for(const t of qt){let best=0;for(const w of it.w){const s=mw(t,w);if(s>best){best=s;if(s===3)break}}
+if(best){hit++;tot+=best}else if(t.length===1&&/[A-Z]/.test(t))soft++}
+if(single&&it.k.includes(raw)){full.push([it,99]);continue}
+if(hit>=1&&hit+soft===qt.length)full.push([it,tot]);
+else if(qt.length>=2&&hit>=Math.ceil(qt.length/2))part.push([it,hit*10+tot])}
+const by=(a,b)=>b[1]-a[1]||(b[0].t>0)-(a[0].t>0)||a[0].c.localeCompare(b[0].c);return{full:full.sort(by),part:part.sort(by)}}
+const line=s=>'<div class="wl"><span><b>'+esc(s[0])+'</b> <small>'+esc(W[s[0]]||"")+'</small></span><span>'+fm(s[1])+(s[2]>0?' <em>· retenido '+fm(s[2])+'</em>':'')+'</span></div>';
+function card(it){const t=it.t,k=t>5?"ok":t>0?"wa":"ba",lab=t>5?"Disponible":t>0?"Stock bajo":"Sin stock";
+const m=it.st.filter(s=>MAIN.includes(s[0])),o=it.st.filter(s=>!MAIN.includes(s[0]));
+return '<div class="card"><div class="top"><span class="code">'+esc(it.c)+'</span><button class="cp" data-c="'+esc(it.c)+'">Copiar código</button></div><div class="desc">'+esc(it.d)+'</div>'
++'<div class="row"><span class="b '+k+'">'+lab+' · Total BAAN: '+fm(t)+'</span>'+(it.r>0?'<span class="b wa">⚠ Retenido: '+fm(it.r)+'</span>':'<span class="b na">Sin retenciones</span>')+'</div>'
++(m.length?m.map(line).join(""):'<div class="wl"><span><small>Sin stock en ARF401 ni ARF402</small></span></div>')
++(o.length?'<details><summary>Otros almacenes ('+o.length+')</summary>'+o.map(line).join("")+'</details>':"")+'</div>'}
+function run(){const q=$("q").value.trim(),res=$("res"),info=$("info");$("chips").style.display=q?"none":"flex";
+if(!q){res.innerHTML="";info.textContent="Escribe con tus propias palabras: no importa el orden ni si abrevias.";return}
+const r=search(q),L=40;let h="";
+if(r.full.length){info.textContent=r.full.length.toLocaleString("es-CO")+" resultado"+(r.full.length>1?"s":"")+(r.full.length>L?" (mostrando "+L+", agrega más palabras para afinar)":"");h=r.full.slice(0,L).map(x=>card(x[0])).join("")}
+else if(r.part.length){info.textContent="Sin coincidencia exacta. Posibles parecidos:";h=r.part.slice(0,15).map(x=>card(x[0])).join("")}
+else{info.textContent="";h='<div class="empty">No encontramos nada para “'+esc(q)+'”.<br>Prueba con menos palabras o con otro nombre. Si no existe, quedará registrado como posible repuesto sin mapear.</div>'}
+res.innerHTML=h;clearTimeout(t2);if(!r.full.length&&!r.part.length&&q.length>=3)t2=setTimeout(()=>{const k=norm(q);if(!seen.has(k)){seen.add(k);const li=document.createElement("li");li.textContent=q;const u=$("nores");if(seen.size===1)u.innerHTML="";u.appendChild(li)}},1500)}
+$("q").addEventListener("input",()=>{clearTimeout(t1);t1=setTimeout(run,150)});
+$("chips").innerHTML=EJ.map(e=>'<button class="chip">'+esc(e)+'</button>').join("");
+$("chips").addEventListener("click",e=>{if(e.target.classList.contains("chip")){$("q").value=e.target.textContent;run()}});
+$("res").addEventListener("click",e=>{const c=e.target.dataset&&e.target.dataset.c;if(!c)return;try{navigator.clipboard.writeText(c);e.target.textContent="¡Copiado!";setTimeout(()=>e.target.textContent="Copiar código",1500)}catch(x){e.target.textContent=c}});
+const MR=[];
+const SL={f1:["ok","Única coincidencia"],fn:["wa","Varias opciones, revisa"],p:["wa","Solo parecidos, verifica"],n:["ba","Sin resultado"]};
+const sk=m=>m.t==="f"?(m.n===1?"f1":"fn"):m.t;
+const cmain=(it,w)=>{const s=it.st.find(x=>x[0]===w);return s?s[1]:0};
+function best(line){let r=search(line);const SP=/\t|;|\||\s-\s/;
+if(!r.full.length&&SP.test(line))for(const c of line.split(SP)){if(norm(c).replace(/[^A-Z0-9]/g,"").length<4)continue;const x=search(c);
+if(x.full.length&&(!r.full.length||x.full.length<r.full.length))r=x;else if(!r.full.length&&!x.full.length&&x.part.length>r.part.length)r=x}
+const l=r.full.length?r.full:r.part;return{cs:l.slice(0,5).map(x=>x[0]),n:l.length,t:r.full.length?"f":r.part.length?"p":"n"}}
+function rowH(i){const m=MR[i],it=m.cs[m.i],s=SL[sk(m)];
+let h='<div class="mr card" id="mr'+i+'"><div class="mq">'+(i+1)+'. '+esc(m.q)+'</div><div class="row"><span class="b '+s[0]+'">'+s[1]+(m.n>1?' ('+m.n.toLocaleString("es-CO")+')':'')+'</span></div>';
+if(it){h+='<div class="top"><span class="code">'+esc(it.c)+'</span><button class="cp" data-c="'+esc(it.c)+'">Copiar código</button></div><div class="desc">'+esc(it.d)+'</div><div class="row"><span class="b '+(it.t>5?"ok":it.t>0?"wa":"ba")+'">Total BAAN: '+fm(it.t)+'</span>'+(it.r>0?'<span class="b wa">⚠ Retenido: '+fm(it.r)+'</span>':'')+'<span>ARF401: '+fm(cmain(it,"ARF401"))+' · ARF402: '+fm(cmain(it,"ARF402"))+'</span></div>';
+if(m.cs.length>1)h+='<details><summary>Otras opciones ('+(m.cs.length-1)+')· toca una para usarla</summary>'+m.cs.map((o,j)=>j===m.i?"":'<div class="wl alt" data-r="'+i+'" data-j="'+j+'"><span><b>'+esc(o.c)+'</b> <small>'+esc(o.d)+'</small></span><span>'+fm(o.t)+'</span></div>').join("")+'</details>'}
+return h+'</div>'}
+function sumM(){const c={f:0,p:0,n:0};MR.forEach(m=>c[m.t]++);$("msum").textContent=MR.length+" líneas · "+c.f+" con coincidencia · "+c.p+" solo parecidos · "+c.n+" sin resultado";$("mcopy").hidden=!MR.length}
+async function runM(){const lines=$("ml").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,200);MR.length=0;$("mres").innerHTML="";$("mcopy").hidden=true;
+if(!lines.length){$("msum").textContent="Pega una lista, un repuesto por línea.";return}
+for(let i=0;i<lines.length;i++){$("msum").textContent="Buscando "+(i+1)+" de "+lines.length+"…";await new Promise(r=>setTimeout(r,0));const b=best(lines[i]);MR.push({q:lines[i],cs:b.cs,n:b.n,t:b.t,i:0});$("mres").insertAdjacentHTML("beforeend",rowH(i))}
+sumM()}
+function tsv(){return["Búsqueda\tCódigo\tDescripción\tTotal BAAN\tRetenido\tARF401\tARF402\tEstado"].concat(MR.map(m=>{const it=m.cs[m.i];return[m.q.replace(/\t/g," "),it?it.c:"",it?it.d:"",it?it.t:"",it?it.r:"",it?cmain(it,"ARF401"):"",it?cmain(it,"ARF402"):"",SL[sk(m)][1]].join("\t")})).join("\n")}
+function copyT(t,b){const ok=()=>{b.textContent="¡Copiado!";setTimeout(()=>b.textContent="📋 Copiar resultados para Excel",1800)};
+const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(x){b.textContent="No se pudo copiar"}a.remove()};
+try{navigator.clipboard.writeText(t).then(ok,fb)}catch(x){fb()}}
+$("mgo").onclick=runM;
+$("mclr").onclick=()=>{$("ml").value="";MR.length=0;$("mres").innerHTML="";$("msum").textContent="";$("mcopy").hidden=true};
+$("mex").onclick=()=>{$("ml").value="tornillo bcc 12*25\nmotor 10 hp\nrodamiento 6205 2rs\nplc fx3u\ntransformador 100kva\nretal trapos\nvalvula inexistente xyz 999";runM()};
+$("mcopy").onclick=e=>copyT(tsv(),e.target);
+$("mres").addEventListener("click",e=>{const a=e.target.closest(".alt");if(a){const i=+a.dataset.r;MR[i].i=+a.dataset.j;$("mr"+i).outerHTML=rowH(i);sumM();return}
+const c=e.target.dataset&&e.target.dataset.c;if(c){try{navigator.clipboard.writeText(c);e.target.textContent="¡Copiado!"}catch(x){}}});
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));const one=b.dataset.m==="1";$("m1").hidden=!one;$("b1").hidden=!one;$("m2").hidden=one});
+run();
+
+}catch(e){document.getElementById("info").textContent="No se pudieron cargar los datos del stock. Intenta de nuevo en unos minutos."}})();
+</script>
+</body>
+</html>
